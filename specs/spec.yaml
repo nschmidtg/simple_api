@@ -1,0 +1,179 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: JSON Placeholder API
+  description: See https://jsonplaceholder.typicode.com/
+paths:
+  /posts/{post_id}/comments:
+    get:
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: The post id.
+          schema:
+            type: string
+            format: uuid
+      description: Returns all comments of a post
+      tags: ["Comments"]
+      operationId: "getComments"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CommentsListVM"
+
+    post:
+      description: Create a new comment
+      tags: ["Comments"]
+      operationId: "createComment"
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: The post id.
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ post_id, body ]
+              properties:
+                body:
+                  type: string
+                  description: The body of the comment
+
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CommentVM"
+  /posts/{post_id}/comments/{comment_id}:
+    get:
+      description: Returns a comment by id
+      tags: ["Comments"]
+      operationId: "getComment"
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: The comment id.
+          schema:
+            type: string
+            format: uuid
+        - name: comment_id
+          in: path
+          required: true
+          description: The post id.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/CommentVM"
+        "404":
+          description: Comment not found
+  /posts:
+    post:
+      description: Create a new post
+      tags: ["Comments"]
+      operationId: "createPost"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [ title ]
+              properties:
+                title:
+                  type: string
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PostVM"
+    get:
+      description: Returns all posts
+      tags: ["Comments"]
+      operationId: "getPosts"
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PostsListVM"
+  /posts/{post_id}:
+    get:
+      description: Returns a post by id
+      tags: ["Comments"]
+      operationId: "getPost"
+      parameters:
+        - name: post_id
+          in: path
+          required: true
+          description: The post id.
+          schema:
+            type: string
+            format: uuid
+      responses:
+        "200":
+          description: Successful response
+          content:
+            "application/json":
+              schema:
+                $ref: "#/components/schemas/PostVM"
+        "404":
+          description: Post not found
+
+components:
+  schemas:
+    PostsListVM:
+      "type": "array"
+      "items":
+        $ref: "#/components/schemas/PostVM"
+    PostVM:
+      "type": "object"
+      "required":
+        - "id"
+        - "title"
+      "properties":
+        id:
+          type: "string"
+        title:
+          type: "string"
+    CommentsListVM:
+      "type": "array"
+      "items":
+        $ref: "#/components/schemas/CommentVM"
+    CommentVM:
+      "type": "object"
+      "required":
+        - "id"
+        - "postId"
+        - "body"
+      "properties":
+        id:
+          type: string
+          format: uuid
+        postId:
+          type: string
+          format: uuid
+        body:
+          type: string
+

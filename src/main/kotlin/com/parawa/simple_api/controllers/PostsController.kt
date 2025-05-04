@@ -26,7 +26,7 @@ class PostsController(
         createPostRequest: CreatePostRequest
     ): ResponseEntity<PostVM> =
         createPostRequest
-            .let(postMapper::toEntity)
+            .let(postMapper::toDto)
             .let(postService::save)
             .let(postMapper::toVM)
             .let(::ok)

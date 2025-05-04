@@ -2,6 +2,7 @@ package com.parawa.simple_api.services
 
 import com.parawa.simple_api.dtos.CommentCreationDto
 import com.parawa.simple_api.entities.Comment
+import com.parawa.simple_api.exceptions.CommentNotFoundException
 import com.parawa.simple_api.mappers.CommentMapper
 import com.parawa.simple_api.repositories.CommentRepository
 import java.util.*
@@ -30,6 +31,6 @@ class CommentService(
         postService.getPost(postId).let { post ->
             commentRepository
                 .findByIdAndPostId(commentId, post.id!!)
-                .orElseThrow { NoSuchElementException("Comment not found") }
+                .orElseThrow { CommentNotFoundException(commentId, post.id!!) }
         }
 }

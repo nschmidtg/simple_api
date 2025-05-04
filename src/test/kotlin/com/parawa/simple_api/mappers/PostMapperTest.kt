@@ -1,5 +1,6 @@
 package com.parawa.simple_api.mappers
 
+import com.parawa.simple_api.dtos.PostCreationDto
 import com.parawa.simple_api.entities.Post
 import java.util.*
 import openapi.generated.model.CreatePostRequest
@@ -10,9 +11,18 @@ class PostMapperTest() {
     private val postMapper = PostMapper()
 
     @Test
-    fun toEntity() {
+    fun toDto() {
         val createPostRequest = CreatePostRequest("Test Title")
-        val post: Post = postMapper.toEntity(createPostRequest)
+        val postCreationDto: PostCreationDto =
+            postMapper.toDto(createPostRequest)
+
+        assertEquals("Test Title", postCreationDto.title)
+    }
+
+    @Test
+    fun toEntity() {
+        val postCreationDto = PostCreationDto("Test Title")
+        val post: Post = postMapper.toEntity(postCreationDto)
 
         assertEquals("Test Title", post.title)
     }
